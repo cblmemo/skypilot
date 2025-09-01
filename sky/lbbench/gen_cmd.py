@@ -12,104 +12,28 @@ from sky.lbbench import utils
 
 raw_describes = [
     'sgl',
-    'sky_sgl_enhanced',
-    # 'sky_sgl_disable_least_load_fallback',
-    'sky_sgl_enhanced_fix_max_concurrency_60',
-    'sky_vanilla_least_load',
-    'sky_least_load_enhanced',
+    'sky_least_load',
     'sky_consistent_hashing',
-    'sky_consistent_hashing_enhanced',
     'sky_round_robin',
-    'sky_round_robin_enhanced',
-    # 'sky_consistent_hashing_irregular_user',
-    # 'sky_consistent_hashing_enhanced_irregular_user',
-    # 'sky_consistent_hashing_prefix_hash',
-    # 'sky_consistent_hashing_enhanced_prefix_hash',
-    # 'sky_consistent_hashing_real_uid',
-    # 'sky_consistent_hashing_enhanced_real_uid',
-    'sky_pull_pull',
-    # 'sky_pull_pull_small',
-    'sky_pull_pull_small_3',
-    'sky_no_cross_region_traffic_handling',
-    'sky_push_pull',
-    'sky_push_push',
-    # 'sky_pull_pull_rate_limit_prefix_tree',
-    'sky_walk_prefix',
-    'sky_walk_ll',
-    'sky_walk_rr',
-    # 'sky_walk_ch',
-    'sky_walk_ch_synthesize',
-    'sky_walk_prefix_enhanced',
+    'sky_walker_prefix',
+    'sky_walker_ch_synthesize',
 ]
 raw_presents = [
     'SGL',
-    'SGL+SelPush',
-    # 'SGLNoLLFallback',
-    'SGLFixedConcurrency',
     'LL',
-    'LL+SelPush',
-    # 'ConsistentHashing',
-    # 'ConsistentHashing+SelPush',
-    # 'ConsistentHashing/IrregularUser',
-    # 'ConsistentHashing+SelPush/IrregularUser',
-    # 'CHash/PrefixHash',
-    # 'CHash+SelPush/PrefixHash',
     'CH',
-    'CH+SelPush',
     'RR',
-    'RR+SelPush',
-    'Ours\\n[Pull/Steal+Pull]',
-    # 'Ours\\n[Pull/StealSmall+Pull]',
-    'Ours\\n[Pull/StealSmall3+Pull]',
-    'NoCrossRegion',
-    'Ours\\n[Push+Pull]',
-    'Ours\\n[Push+Push]',
-    # 'Ours\\n[SelPush/Prefix+Pull]',
-    'SkyWalk/Prefix',
-    'SkyWalk/LL',
-    'SkyWalk/RR',
-    'SkyWalk/CH',
-    'SkyWalk/PrefixEnahnced',
-]
-
-raw_describes = [
-    'sgl',
-    'sky_sgl_enhanced',
-    'sky_sgl_enhanced_fix_max_concurrency_40',
-    'sky_sgl_enhanced_fix_max_concurrency_50',
-    'sky_sgl_enhanced_fix_max_concurrency_60',
-    'sky_sgl_enhanced_fix_max_concurrency_70',
-]
-raw_presents = [
-    'BP',
-    'SP-P',
-    'SP-C(40)',
-    'SP-C(50)',
-    'SP-C(60)',
-    'SP-C(70)',
+    'SkyWalker/Prefix',
+    'SkyWalker/CH',
 ]
 
 enabled_systems = [
     0,  # sgl router
-    1,  # sgl router enhanced
-    # 2,  # sgl router no least load fallback
-    2,  # sgl router with fixed max concurrency
-    3,  # vanilla least load
-    4,  # global least load
-    5,  # consistent hashing
-    6,  # consistent hashing with selective pushing
-    7,  # round robin
-    8,  # rr with selective pushing
-    9,  # sky pulling in lb, pulling in replica, but workload stealing
-    10,  # sky pulling in lb, pulling in replica, but steal small #requests
-    11,  # no cross-region traffic handling baseline.
-    12,  # sky pushing in lb, pulling in replica
-    13,  # sky pushing in lb, pushing in replica
-    14,  # selective pushing for both lb and replica. with prefix tree.
-    15,  # selective pushing for both lb and replica. with least load.
-    16,  # selective pushing for both lb and replica. with round robin.
-    17,  # selective pushing for both lb and replica. with consistent hashing.
-    18,  # same with 13 but disable least load fallback for < 50% match.
+    1,  # vanilla least load
+    2,  # consistent hashing
+    3,  # round robin
+    4,  # selective pushing for both lb and replica. with prefix tree.
+    5,  # selective pushing for both lb and replica. with consistent hashing.
 ]
 enabled_systems = list(range(6))
 # enabled_systems = [15]

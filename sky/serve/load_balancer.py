@@ -46,7 +46,7 @@ _USE_V2_STEALING = env_options.Options.USE_V2_STEALING.get()
 _DISABLE_LEAST_LOAD_IN_PREFIX = env_options.Options.DISABLE_LEAST_LOAD_IN_PREFIX.get(
 )
 _USE_IE_QUEUE_INDICATOR = env_options.Options.USE_IE_QUEUE_INDICATOR.get()
-_DISABLE_SELECTIVE_PUSHING = env_options.Options.DISABLE_SELECTIVE_PUSHING.get()
+_ENABLE_SELECTIVE_PUSHING = env_options.Options.ENABLE_SELECTIVE_PUSHING.get()
 _FORCE_DISABLE_STEALING = env_options.Options.FORCE_DISABLE_STEALING.get()
 
 
@@ -1361,8 +1361,7 @@ class SkyServeLoadBalancer:
             if _DO_PUSHING_TO_REPLICA:
                 self._replica_pool.enable_load_balancing()
             else:
-                if (self._use_ie_queue_indicator and
-                        not _DISABLE_SELECTIVE_PUSHING):
+                if self._use_ie_queue_indicator and _ENABLE_SELECTIVE_PUSHING:
                     self._tasks.append(
                         self._loop.create_task(self._probe_ie_queue()))
 
@@ -1426,8 +1425,8 @@ class SkyServeLoadBalancer:
             f'[{os.getenv(env_options.Options.DO_PUSHING_TO_REPLICA.env_key)}], '
             f'_LB_PUSHING_ENABLE_LB: {_LB_PUSHING_ENABLE_LB}, '
             f'[{os.getenv(env_options.Options.LB_PUSHING_ENABLE_LB.env_key)}], '
-            f'_DISABLE_SELECTIVE_PUSHING: {_DISABLE_SELECTIVE_PUSHING}, '
-            f'[{os.getenv(env_options.Options.DISABLE_SELECTIVE_PUSHING.env_key)}], '
+            f'_ENABLE_SELECTIVE_PUSHING: {_ENABLE_SELECTIVE_PUSHING}, '
+            f'[{os.getenv(env_options.Options.ENABLE_SELECTIVE_PUSHING.env_key)}], '
             f'_DISABLE_LEAST_LOAD_IN_PREFIX: {_DISABLE_LEAST_LOAD_IN_PREFIX}, '
             f'[{os.getenv(env_options.Options.DISABLE_LEAST_LOAD_IN_PREFIX.env_key)}], '
             f'_FORCE_DISABLE_STEALING: {_FORCE_DISABLE_STEALING}, '

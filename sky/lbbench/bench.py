@@ -87,9 +87,6 @@ async def launch_task(args: argparse.Namespace, workload_module) -> None:
 
 
 def main():
-    # py examples/serve/external-lb/bench.py
-    # --exp-name sky-exp --num-branches 2 --num-users 5 --num-questions 1
-    # --backend-url vllmtest.aws.cblmemo.net:8000
     all_workloads_file = os.listdir(
         os.path.join(os.path.dirname(__file__), 'workloads'))
     all_workloads = [f.split('.')[0] for f in all_workloads_file]
