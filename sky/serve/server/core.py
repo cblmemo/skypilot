@@ -226,7 +226,9 @@ def up(
             env_options.Options.LB_PUSHING_ENABLE_LB,
             env_options.Options.DO_PUSHING_TO_REPLICA,
             env_options.Options.USE_V2_STEALING,
+            env_options.Options.ENABLE_SELECTIVE_PUSHING,
             env_options.Options.DISABLE_LEAST_LOAD_IN_PREFIX,
+            env_options.Options.USE_IE_QUEUE_INDICATOR,
             env_options.Options.FORCE_DISABLE_STEALING,
         ]
         assert isinstance(vars_to_fill['controller_envs'], dict)

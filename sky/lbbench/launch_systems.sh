@@ -7,7 +7,7 @@ for i in {0..5}; do
   names+=("$name")
 
   # Build the argument list safely with an array
-  cmd=( sky serve up examples/serve/external-lb/llm.yaml -y -n "$name" --env HF_TOKEN --env STABLE_BUILD_API )
+  cmd=( sky serve up examples/serve/external-lb/llm.yaml -y -n "$name" --env HF_TOKEN --env STABLE_BUILD_API --async )
   (( i >= 4 )) && cmd+=( --env DO_PUSHING_ACROSS_LB=true --env LB_PUSHING_ENABLE_LB=false --env ENABLE_SELECTIVE_PUSHING=true )
   (( i == 4 )) && cmd+=( --env LB_POLICY=prefix_tree --env META_LB_POLICY=prefix_tree )
   (( i == 5 )) && cmd+=( --env LB_POLICY=consistent_hashing --env META_LB_POLICY=consistent_hashing )

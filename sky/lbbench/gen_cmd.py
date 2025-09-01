@@ -35,8 +35,6 @@ enabled_systems = [
     4,  # selective pushing for both lb and replica. with prefix tree.
     5,  # selective pushing for both lb and replica. with consistent hashing.
 ]
-enabled_systems = list(range(6))
-# enabled_systems = [15]
 
 describes = [raw_describes[i] for i in enabled_systems]
 presents = [raw_presents[i] for i in enabled_systems]
