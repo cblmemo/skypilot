@@ -1,7 +1,6 @@
 name: multi-lb-llm
 
 envs:
-  # MODEL_NAME: meta-llama/Llama-3.2-3B-Instruct
   MODEL_NAME: meta-llama/Llama-3.1-8B-Instruct
   HF_TOKEN:
   META_LB_POLICY: prefix_tree

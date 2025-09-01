@@ -155,7 +155,7 @@ def main():
     parser.add_argument('--service-names', type=str, nargs='+', required=True)
     parser.add_argument('--exp-name', type=str, required=True)
     parser.add_argument('--extra-args', type=str, default='')
-    parser.add_argument('--output-dir', type=str, default='@temp')
+    parser.add_argument('--output-dir', type=str, default='exp-result')
     parser.add_argument('--regions', type=str, default=None, nargs='+')
     parser.add_argument('--region-to-args', type=str, default=None)
     parser.add_argument('--reload-client', action='store_true')
@@ -381,7 +381,7 @@ def main():
 
     print(f'{"Parallel execution script":=^70}')
     print(f'Generated parallel execution script at {script_path}')
-    run_log = '@temp/run.log'
+    run_log = 'exp-result/run.log'
     print(f'Run with: bash {script_path} > {run_log} 2>&1')
     print(f'Tail the log file: tail -f {run_log}')
 

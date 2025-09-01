@@ -93,7 +93,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--exp2backend', type=str, required=True)
     parser.add_argument('-y', '--yes', action='store_true')
-    parser.add_argument('--output-dir', type=str, default='@temp')
+    parser.add_argument('--output-dir', type=str, default='exp-result')
     parser.add_argument('--signal-file', type=str, required=True)
     args = parser.parse_args()
     exp2backend = json.loads(args.exp2backend)

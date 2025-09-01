@@ -98,7 +98,7 @@ def main():
     parser.add_argument('--num-users', type=int, default=1)
     parser.add_argument('--backend-url', type=str, default=None)
     parser.add_argument('-y', '--yes', action='store_true')
-    parser.add_argument('--output-dir', type=str, default='@temp')
+    parser.add_argument('--output-dir', type=str, default='exp-result')
     parser.add_argument('--workload',
                         type=str,
                         required=True,

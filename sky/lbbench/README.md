@@ -26,11 +26,11 @@ Cloning the plot script to the correct path:
 ```bash
 $ pwd
 /path/to/skypilot  # clone the plot repo under skypilot directory
-$ mkdir @temp && cd @temp
+$ mkdir exp-result && cd exp-result
 $ git clone git@github.com:cblmemo/sky-lb-e2e-eval-result.git result
 ```
 
-> The `@temp` dir is the default argument for all benchmark scripts. It should also be possible to change it by `--output-dir`.
+> The `exp-result` dir is the default argument for all benchmark scripts. It should also be possible to change it by `--output-dir`.
 
 Prepare your Hugging Face Token:
 
@@ -193,16 +193,16 @@ You should see the following output:
 
 ```bash
 ======================Parallel execution script=======================
-Generated parallel execution script at @temp/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
-Run with: bash @temp/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
+Generated parallel execution script at exp-result/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
+Run with: bash exp-result/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
 ```
 
 ## Step 4: Run the commands
 
-A script will be generated at `@temp/result/scripts/`. Run it with:
+A script will be generated at `exp-result/result/scripts/`. Run it with:
 
 ```bash
-bash @temp/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
+bash exp-result/result/scripts/arena_syn_mrc_100_50_tail_c2000_u150_d240.bash
 ```
 
 And wait for it to finish.
@@ -220,13 +220,13 @@ Final step is to plot the results. You should see the following output from the 
     'arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push': 'Ours\n[Push+Push]',
 ```
 
-Copy-pasting them into the `gn2alias` variable in the `@temp/result/plot.py` script and run it. **Make sure to comment out other parts in the variable**.
+Copy-pasting them into the `gn2alias` variable in the `exp-result/result/plot.py` script and run it. **Make sure to comment out other parts in the variable**.
 
 ```bash
-python3 @temp/result/plot.py
+python3 exp-result/result/plot.py
 ```
 
-You should see the figures in the `@temp/result/fig` directory.
+You should see the figures in the `exp-result/result/fig` directory.
 
 ## Step 6: Cleanup
 
@@ -258,7 +258,7 @@ You will see 1 command. It will pull status from all systems.
 
 ```bash
 ================Queue status puller (Running locally)=================
-python3 -m sky.lbbench.queue_fetcher --exp2backend '{"arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl": "44.202.52.238:9001", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced": "52.91.17.83:9002", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull": "svc3.aws.cblmemo.net:8000", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull": "svc4.aws.cblmemo.net:8000", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push": "svc5.aws.cblmemo.net:8000"}' --output-dir @temp
+python3 -m sky.lbbench.queue_fetcher --exp2backend '{"arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl": "44.202.52.238:9001", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced": "52.91.17.83:9002", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull": "svc3.aws.cblmemo.net:8000", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull": "svc4.aws.cblmemo.net:8000", "arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push": "svc5.aws.cblmemo.net:8000"}' --output-dir exp-result
 ```
 
 **Press enter to confirm after running it**. You should see the following output after confirmation:
@@ -364,21 +364,21 @@ You will see a group of commands. Each line will sync down the results from one 
 
 ```bash
 ==========================Sync down results===========================
-mkdir -p @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl
-scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl/llmc-us-east-2.json
-scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl/llmc-ap-northeast-1.json
-mkdir -p @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced
-scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced/llmc-us-east-2.json
-scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced/llmc-ap-northeast-1.json
-mkdir -p @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull
-scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull/llmc-us-east-2.json
-scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull/llmc-ap-northeast-1.json
-mkdir -p @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull
-scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull/llmc-us-east-2.json
-scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull/llmc-ap-northeast-1.json
-mkdir -p @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push
-scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push/llmc-us-east-2.json
-scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push.json @temp/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push/llmc-ap-northeast-1.json
+mkdir -p exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl
+scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl/llmc-us-east-2.json
+scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sgl/llmc-ap-northeast-1.json
+mkdir -p exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced
+scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced/llmc-us-east-2.json
+scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_sgl_enhanced/llmc-ap-northeast-1.json
+mkdir -p exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull
+scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull/llmc-us-east-2.json
+scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_pull_pull/llmc-ap-northeast-1.json
+mkdir -p exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull
+scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull/llmc-us-east-2.json
+scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_pull/llmc-ap-northeast-1.json
+mkdir -p exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push
+scp llmc-us-east-2:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push/llmc-us-east-2.json
+scp llmc-ap-northeast-1:~/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push.json exp-result/result/metric/arena_syn_mrc_100_50_tail_c2000_u150_d240_sky_push_push/llmc-ap-northeast-1.json
 ```
 
 **Also, press enter to end all queue status pullers**. You should see the following output:

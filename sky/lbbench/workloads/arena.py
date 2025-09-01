@@ -80,7 +80,7 @@ def _plot_request_rate(groups: Dict[int, List[Dict[str, Any]]]) -> None:
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    fn = '@temp/user_request_rates.pdf'
+    fn = 'exp-result/user_request_rates.pdf'
     plt.savefig(fn)
     plt.close()
     rp(f'Aggregated request rate plot saved to {fn}')

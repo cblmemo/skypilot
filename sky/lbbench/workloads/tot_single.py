@@ -23,7 +23,7 @@ dataset_link = 'https://raw.githubusercontent.com/openai/grade-school-math/maste
 
 
 def add_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('--data-path', type=str, default='@temp/test.jsonl')
+    parser.add_argument('--data-path', type=str, default='exp-result/test.jsonl')
     parser.add_argument('--num-branches', type=int, default=2)
     parser.add_argument('--duration', type=float, default=10)
     parser.add_argument('--seed', type=str, default='default')
