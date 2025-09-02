@@ -67,18 +67,9 @@ async def _tree_search(uid: int, question: str, num_branches: int, tic: float,
     results: List[utils.OAIChatHistory] = []
     while tasks:
         if time.time() - tic > duration:
-            # print(f'[{tic:.1f}][{time.time() - tic:.3f}]'
-            #       f'[START CANCEL] User {uid} '
-            #       f'cancelling {len(tasks)} tasks')
             for task in tasks:
                 task.cancel()
-            # print(f'[{tic:.1f}][{time.time() - tic:.3f}]'
-            #       f'[END CANCEL] User {uid} '
-            #       f'cancelled {len(tasks)} tasks')
             return results
-        st_wait = time.time()
-        # print(f'[{tic:.1f}][{st_wait - tic:.3f}][START WAIT] User {uid} '
-        #       f'len tasks: {len(tasks)}')
         # Check every 10 seconds.
         timeout = min(10, duration - (time.time() - tic))
         try:
@@ -87,33 +78,12 @@ async def _tree_search(uid: int, question: str, num_branches: int, tic: float,
                                                    timeout=timeout)
         except asyncio.TimeoutError:
             continue
-            # done, pending = [], tasks
-        ed_wait = time.time()
-        # print(f'[{tic:.1f}][{ed_wait - tic:.3f}]'
-        #       f'[END WAIT] User {uid} elapsed: '
-        #       f'{ed_wait - st_wait:.3f}, timeout: {timeout:.3f}, '
-        #       f'len done: {len(done)}, len pending: {len(pending)}')
-        if ed_wait - st_wait > timeout + 2:
-            print('>>> event-loop blocked for', ed_wait - st_wait, 's',
-                  len(done), len(pending), '        ', len(asyncio.all_tasks()))
-            # print(">>> loop time:", asyncio.get_running_loop().time(),
-            #     " wall:", time.perf_counter())
-            # import traceback
-            # for t in asyncio.all_tasks():
-            #     print('='*100, t, t.get_coro())
-            #     if not t.done():
-            #         traceback.print_stack(t.get_stack()[-1])
         tasks = list(pending)
         for task in done:
             s = task.result()
             if isinstance(s, Exception):
                 continue
-            # st_copy = time.time()
             s = copy.deepcopy(s)
-            # ed_copy = time.time()
-            # print(f'[{tic:.1f}][{ed_copy - tic:.3f}]'
-            #       f'[COPY] User {uid} elapsed: '
-            #       f'{ed_copy - st_copy:.3f}')
             if len(s) == len(prompts) * 2 or time.time() - tic > duration:
                 results.append(s)
                 continue
@@ -135,13 +105,6 @@ async def _tree_search(uid: int, question: str, num_branches: int, tic: float,
 async def _user_task(tic: float, uid: int, questions: List[str],
                      num_branches: int, duration: float,
                      real_user: str) -> List[utils.OAIChatHistory]:
-    # time_to_sleep = uid * 10
-    # rp(f'User {uid}: sleep for {time_to_sleep} seconds to start')
-    # rp(f'User {uid}: {len(questions)} questions in total')
-    # await asyncio.sleep(time_to_sleep)
-    # rp(f'User {uid}: start sending requests')
-    # tic = time.time()
-    # tasks = []
     results = []
     cnt = 0
     iteration_cnt = 0
@@ -149,28 +112,11 @@ async def _user_task(tic: float, uid: int, questions: List[str],
         iteration_cnt += 1
         for question in questions:
             cnt += 1
-            # print(f'[{tic:.1f}][{time.time() - tic:.3f}]'
-            #       f'[START] User {uid} question {cnt} '
-            #       f'iteration {iteration_cnt}', flush=True)
             result = await _tree_search(uid, question, num_branches, tic,
                                         duration, real_user)
-            # print(f'[{tic:.1f}][{time.time() - tic:.3f}]'
-            #       f'[END] User {uid} question {cnt} '
-            #       f'iteration {iteration_cnt}', flush=True)
             results.extend(result)
             if time.time() - tic > duration:
                 return results
-    # for i, task in enumerate(asyncio.as_completed(tasks)):
-    #     result = await task
-    #     if isinstance(result, Exception):
-    #         rp(f'User {uid} FAILED: {result}.'
-    #            f'  Traceback: {traceback.format_exc()}')
-    #         continue
-    #     results.extend(result)
-    #     progress = f'({i+1}/{len(questions)})'
-    #     rp(f'User {uid}: {progress:^8} questions completed. '
-    #        f'Latency: {time.time() - tic:.3f}')
-    # return results
 
 
 def download_dataset(dp: str) -> None:
