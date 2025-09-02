@@ -14,7 +14,6 @@ single_lb_clusters = [
     'round-robin',
 ]
 
-
 single_lb_policy_and_extra_args = [
     (None, None),
     ('least_load', None),

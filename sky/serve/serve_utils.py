@@ -1032,10 +1032,14 @@ def format_service_table(service_records: List[Dict[str, Any]],
     if not service_records:
         return 'No existing services.'
 
+    show_region_allocation = False
+
     service_columns = [
         'NAME', 'VERSION', 'UPTIME', 'STATUS', 'REPLICAS', 'EXTERNAL_LBS',
         'ENDPOINT'
     ]
+    if show_region_allocation:
+        service_columns.append('REGION_ALLOCATION')
     if show_all:
         service_columns.extend([
             'AUTOSCALING_POLICY', 'LOAD_BALANCING_POLICY', 'REQUESTED_RESOURCES'
@@ -1049,9 +1053,15 @@ def format_service_table(service_records: List[Dict[str, Any]],
             # TODO(tian): Hack. Fix this.
             # NOTE(tian): Align with format_lb_service_name.
             continue
+        region_allocation_dict = collections.defaultdict(int)
         for replica in record['replica_info']:
             replica['service_name'] = record['name']
             replica_infos.append(replica)
+            if show_region_allocation and replica['handle'] is not None:
+                if replica['handle'].launched_resources is not None:
+                    region_allocation_dict[
+                        replica['handle'].launched_resources.region] += 1
+        region_allocation = str(dict(region_allocation_dict))
         for external_lb in record['external_lb_info']:
             external_lb['service_name'] = record['name']
             external_lb_infos.append(external_lb)
@@ -1082,6 +1092,8 @@ def format_service_table(service_records: List[Dict[str, Any]],
             external_lbs,
             endpoint,
         ]
+        if show_region_allocation:
+            service_values.append(region_allocation)
         if show_all:
             service_values.extend(
                 [policy, load_balancing_policy, requested_resources_str])

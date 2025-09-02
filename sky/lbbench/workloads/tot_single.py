@@ -23,7 +23,9 @@ dataset_link = 'https://raw.githubusercontent.com/openai/grade-school-math/maste
 
 
 def add_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('--data-path', type=str, default='exp-result/test.jsonl')
+    parser.add_argument('--data-path',
+                        type=str,
+                        default='exp-result/test.jsonl')
     parser.add_argument('--num-branches', type=int, default=2)
     parser.add_argument('--duration', type=float, default=10)
     parser.add_argument('--seed', type=str, default='default')
@@ -126,8 +128,6 @@ async def _tree_search(uid: int, idx: int, question: str, num_branches: int,
                     tic=tic,
                     duration=duration,
                     hash_key=f'{real_user}-{uid}',
-                    # hash_key=f'{real_user}-{uid // (num_users // 5)}',
-                    # hash_key=str(hash_key),
                     program_id=f'{real_user}-{uid}-{idx}',
                 )
                 tasks.append(call_llm_coro)

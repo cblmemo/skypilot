@@ -1434,8 +1434,7 @@ class SkyServeLoadBalancer:
             f'_USE_IE_QUEUE_INDICATOR: {_USE_IE_QUEUE_INDICATOR}, '
             f'[{os.getenv(env_options.Options.USE_IE_QUEUE_INDICATOR.env_key)}], '
             f'max_concurrent_requests: {self._max_concurrent_requests}, '
-            f'use_ie_queue_indicator: {self._use_ie_queue_indicator}'
-        )
+            f'use_ie_queue_indicator: {self._use_ie_queue_indicator}')
         uvicorn.run(self._app,
                     host='0.0.0.0',
                     port=self._load_balancer_port,

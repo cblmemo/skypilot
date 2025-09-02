@@ -111,7 +111,6 @@ async def _multi_turn_conv(uid: int, duration: int, tic: float, real_uid: str,
                     only_return_new_round=True,
                     tic=tic,
                     duration=duration,
-                    # hash_key=f'{real_uid}-{uid}',
                     hash_key=conv['user'],
                 ))
             while not task.done():

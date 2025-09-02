@@ -16,7 +16,7 @@ raw_describes = [
     'sky_consistent_hashing',
     'sky_round_robin',
     'sky_walker_prefix',
-    'sky_walker_ch_synthesize',
+    'sky_walker_ch',
 ]
 raw_presents = [
     'SGL',
@@ -32,8 +32,8 @@ enabled_systems = [
     1,  # vanilla least load
     2,  # consistent hashing
     3,  # round robin
-    4,  # selective pushing for both lb and replica. with prefix tree.
-    5,  # selective pushing for both lb and replica. with consistent hashing.
+    4,  # skywalker with prefix tree
+    5,  # skywalker with consistent hashing
 ]
 
 describes = [raw_describes[i] for i in enabled_systems]
@@ -254,28 +254,43 @@ def main():
             cluster = _region_cluster_name(r)
             f.write(f' {cluster}')
         f.write(')\n')
-        f.write('    filtered_output=$(echo "$queue_output" | grep "$exp_name" || true)\n')
+        f.write(
+            '    filtered_output=$(echo "$queue_output" | grep "$exp_name" || true)\n'
+        )
         f.write('    if echo "$filtered_output" | grep -q "FAILED"; then\n')
-        f.write('      echo "ERROR: Found FAILED jobs for experiment $exp_name!"\n')
+        f.write(
+            '      echo "ERROR: Found FAILED jobs for experiment $exp_name!"\n')
         f.write('      echo "$filtered_output" | grep "FAILED"\n')
         f.write('      exit 1\n')
         f.write('    fi\n')
-        f.write('    num_succeeded=$(echo "$filtered_output" | grep -c "SUCCEEDED" || true)\n')
-        f.write('    num_running=$(echo "$filtered_output" | grep -c "RUNNING" || true)\n')
+        f.write(
+            '    num_succeeded=$(echo "$filtered_output" | grep -c "SUCCEEDED" || true)\n'
+        )
+        f.write(
+            '    num_running=$(echo "$filtered_output" | grep -c "RUNNING" || true)\n'
+        )
         f.write('    total_jobs=$((num_succeeded + num_running))\n')
         f.write('    if [ "$total_jobs" -ne "$expected_jobs" ]; then\n')
-        f.write('      echo "WARNING: Expected $expected_jobs jobs but found $total_jobs (Finished: $num_succeeded, Running: $num_running)"\n')
+        f.write(
+            '      echo "WARNING: Expected $expected_jobs jobs but found $total_jobs (Finished: $num_succeeded, Running: $num_running)"\n'
+        )
         f.write('      echo "Retrying queue status fetch..."\n')
         f.write('      sleep 5\n')
         f.write('      continue\n')
         f.write('    fi\n')
-        f.write('    if echo "$filtered_output" | grep -q "SUCCEEDED" && ! echo "$filtered_output" | grep -q "RUNNING"; then\n')
-        f.write('      echo "All queues are empty after '
-                '$elapsed seconds ($wait_count checks). Finished: $num_succeeded, Running: $num_running"\n')
+        f.write(
+            '    if echo "$filtered_output" | grep -q "SUCCEEDED" && ! echo "$filtered_output" | grep -q "RUNNING"; then\n'
+        )
+        f.write(
+            '      echo "All queues are empty after '
+            '$elapsed seconds ($wait_count checks). Finished: $num_succeeded, Running: $num_running"\n'
+        )
         f.write('      break\n')
         f.write('    fi\n')
-        f.write('    echo "Waiting for queues to be empty... Elapsed time: '
-                '$elapsed seconds, Check #$wait_count, Finished: $num_succeeded, Running: $num_running"\n')
+        f.write(
+            '    echo "Waiting for queues to be empty... Elapsed time: '
+            '$elapsed seconds, Check #$wait_count, Finished: $num_succeeded, Running: $num_running"\n'
+        )
         # f.write('    echo "$queue_output"\n')
         f.write('    sleep 10\n')
         f.write('  done\n')
@@ -306,10 +321,6 @@ def main():
     run_log = 'exp-result/run.log'
     print(f'Run with: bash {script_path} > {run_log} 2>&1')
     print(f'Tail the log file: tail -f {run_log}')
-
-    print(f'{"Generate result table":=^70}')
-    for nm in name_mapping:
-        print(nm)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 """ReplicaManager: handles the creation and deletion of endpoint replicas."""
+import collections
 import dataclasses
 import enum
 import functools
@@ -649,6 +650,12 @@ class SkyPilotReplicaManager(ReplicaManager):
                  task_yaml_path: str) -> None:
         super().__init__(service_name, spec)
         self._task_yaml_path = task_yaml_path
+        if task_yaml_path.endswith('.j2'):
+            self._num_resources = None
+        else:
+            config = common_utils.read_yaml(os.path.expanduser(task_yaml_path))
+            task = sky.Task.from_yaml_config(config)
+            self._num_resources = len(task.resources)
         # TODO(tian): Store launch/down pid in the replica table, to make the
         # manager more persistent. Current blocker is that we need to manually
         # poll the Process (by join or is_launch), otherwise, it will never
@@ -712,9 +719,29 @@ class SkyPilotReplicaManager(ReplicaManager):
     def scale_up(self,
                  resources_override: Optional[Dict[str, Any]] = None,
                  j2_vars: Optional[Dict[str, Any]] = None) -> int:
-        rid = self._next_replica_id
+        replica_infos = serve_state.get_replica_infos(self._service_name)
+        replica_infos = [
+            ri for ri in replica_infos
+            if ri.status in serve_state.ReplicaStatus.scheduled_statuses()
+        ]
+        rimod2num: Dict[int, int] = collections.defaultdict(int)
+        if self._num_resources is None:
+            rid = self._next_replica_id
+            self._next_replica_id += 1
+        else:
+            for ri in replica_infos:
+                rimod2num[ri.replica_id % self._num_resources] += 1
+            if not rimod2num or len(set(rimod2num.values())) == 1:
+                rid = self._next_replica_id
+                self._next_replica_id += 1
+            else:
+                max_num = max(rimod2num.values())
+                while True:
+                    rid = self._next_replica_id
+                    self._next_replica_id += 1
+                    if rimod2num[rid % self._num_resources] < max_num:
+                        break
         self._launch_replica(rid, resources_override, j2_vars)
-        self._next_replica_id += 1
         return rid
 
     def _terminate_replica(self,

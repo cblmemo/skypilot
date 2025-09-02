@@ -82,7 +82,8 @@ def _filter_conv_by_region(conv: Dict[str, Any], region: str) -> bool:
 def _load_dataset(region: str, start_index: int) -> List[Dict[str, Any]]:
     tic = time.time()
     split_slice = f'{start_index*100000}:{(start_index+1)*100000}'
-    chunk_data = datasets.load_dataset(DATASET_NAME, split=f'train[{split_slice}]')
+    chunk_data = datasets.load_dataset(DATASET_NAME,
+                                       split=f'train[{split_slice}]')
     multi_turn_data = []
     for d in chunk_data:
         # At least 2 full turns: user + assistant + user + assistant (len >= 4)
@@ -112,8 +113,9 @@ def _load_dataset(region: str, start_index: int) -> List[Dict[str, Any]]:
 # _load_dataset('ap-northeast-1')
 
 
-async def _multi_turn_conv(uid: int, idx: int, duration: int, tic: float, real_uid: str,
-                           conv: Dict[str, Any], open_loop_threshold: Optional[int]) -> None:
+async def _multi_turn_conv(uid: int, idx: int, duration: int, tic: float,
+                           real_uid: str, conv: Dict[str, Any],
+                           open_loop_threshold: Optional[int]) -> None:
     history = []
     for i, msg in enumerate(conv['conv']):
         elapsed = time.time() - tic
@@ -136,7 +138,6 @@ async def _multi_turn_conv(uid: int, idx: int, duration: int, tic: float, real_u
                     only_return_new_round=True,
                     tic=tic,
                     duration=duration,
-                    # hash_key=f'{real_uid}-{uid}',
                     hash_key=conv['user'],
                     program_id=f'{real_uid}-{uid}-{idx}',
                 ))
@@ -153,15 +154,17 @@ async def _multi_turn_conv(uid: int, idx: int, duration: int, tic: float, real_u
             print(f'[{tic:.1f}][{time.time() - tic:.3f}] User {uid} '
                   f'done one task, {len(history)=}')
             if open_loop_threshold is not None:
-                remaining_to_wait = max(0, open_loop_threshold - (time.time() - st_this_round))
-                remaining_to_wait = min(remaining_to_wait, duration - (time.time() - tic))
+                remaining_to_wait = max(
+                    0, open_loop_threshold - (time.time() - st_this_round))
+                remaining_to_wait = min(remaining_to_wait,
+                                        duration - (time.time() - tic))
                 if remaining_to_wait > 0:
                     await asyncio.sleep(remaining_to_wait)
 
 
 async def _user_task(duration: int, tic: float, uid: int, max_uid: int,
-                     convs: List[Dict[str, Any]], real_uid: str,
-                     region: str, open_loop_threshold: Optional[int]) -> None:
+                     convs: List[Dict[str, Any]], real_uid: str, region: str,
+                     open_loop_threshold: Optional[int]) -> None:
     uid_repr = f'{uid:<{len(str(max_uid))}}'
     print(f'User {uid_repr}: {len(convs)} conversations in total.')
 
@@ -171,7 +174,8 @@ async def _user_task(duration: int, tic: float, uid: int, max_uid: int,
             break
         # We already filtered the conversations by region in _load_dataset
         assert _filter_conv_by_region(conv, region)
-        coro = _multi_turn_conv(uid, i, duration, tic, real_uid, conv, open_loop_threshold)
+        coro = _multi_turn_conv(uid, i, duration, tic, real_uid, conv,
+                                open_loop_threshold)
         try:
             await coro
             print(f'User {uid_repr}: ({i+1}/{len(convs)}) conversations '
@@ -183,11 +187,13 @@ async def _user_task(duration: int, tic: float, uid: int, max_uid: int,
 
 
 async def _user_task_loop(duration: int, uid: int, max_uid: int,
-                          convs: List[Dict[str, Any]], real_uid: str,
-                          region: str, open_loop_threshold: Optional[int]) -> None:
+                          convs: List[Dict[str,
+                                           Any]], real_uid: str, region: str,
+                          open_loop_threshold: Optional[int]) -> None:
     tic = time.time()
     while True:
-        await _user_task(duration, tic, uid, max_uid, convs, real_uid, region, open_loop_threshold)
+        await _user_task(duration, tic, uid, max_uid, convs, real_uid, region,
+                         open_loop_threshold)
         if time.time() - tic > duration:
             break
 
@@ -223,5 +229,6 @@ def launch_user_tasks(args: argparse.Namespace,
         user_convs.sort(key=lambda conv: conv['timestamp'])
         tasks.append(
             _user_task_loop(args.duration, uid, len(groups), user_convs,
-                            str(args.seed), args.region, args.open_loop_threshold))
+                            str(args.seed), args.region,
+                            args.open_loop_threshold))
     return tasks

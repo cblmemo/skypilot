@@ -2,6 +2,10 @@ python3 -m sky.lbbench.launch_lb --service-names b70 b71 b72 b73 b74 b75
 
 python3 -m sky.lbbench.gen_cmd --service-names a592 --exp-name arena_syn_multi_turn_motivation_8_replicas_trial_two_80_80_80_u240_d600 --extra-args '--workload arena_syn --duration 600' --region-to-args '{"us-east-2":"--num-users 80","ap-northeast-1":"--num-users 80","eu-central-1":"--num-users 80"}' --reload-client
 
+
+python3 -m sky.lbbench.launch_lb --service-names arena0 arena1 arena2 arena3
+python3 -m sky.lbbench.gen_cmd --service-names arena0 arena1 arena2 arena3 arena4 arena5 --exp-name arena --extra-args '--workload arena_syn --duration 600' --region-to-args '{"us-east-2":"--num-users 80","ap-northeast-1":"--num-users 80","eu-central-1":"--num-users 80"}' --reload-client
+
 python3 -m sky.lbbench.gen_cmd --service-names b70 b71 b72 b73 b74 b75 --exp-name ablation_single_region_selpus_trial_4_tot_b2_u30 --extra-args '--workload tot_single --duration 600 --num-branches 2' --region-to-args '{"us-east-2":"--num-users 30"}'
 
 # python3 -m sky.lbbench.gen_cmd --service-names a250 a251 a252 a253 a254 a257 --exp-name arena_syn_motivation_12_replicas_200_100_100_c2000_u400_d240 --extra-args '--workload arena_syn --duration 240 --num-conv 2000' --region-to-args '{"us-east-2":"--num-users 300","ap-northeast-1":"--num-users 100"}'
@@ -18,7 +22,7 @@ python3 -m sky.lbbench.gen_cmd --service-names a582 a5817 --exp-name wildchat_mu
 
 python3 -m sky.lbbench.gen_cmd --service-names a620 a623 a625 a627 a6213 a6216 --exp-name tot_huge_tree_2_2_2_u4_b4_d600 --extra-args '--workload tot_single --duration 600 --num-branches 4' --region-to-args '{"us-east-2":"--num-users 2","ap-northeast-1":"--num-users 2","eu-central-1":"--num-users 2"}' --reload-client
 
-python3 -m sky.lbbench.gen_cmd --service-names b21 --exp-name tot_single_mixed_12_replicas_3_b4_20_20_b2_d600 --extra-args '--workload tot_single --duration 600' --region-to-args '{"us-east-2":"--num-users 2 --num-branches 4","ap-northeast-1":"--num-users 20 --num-branches 2","eu-central-1":"--num-users 20 --num-branches 2"}' --reload-client
+python3 -m sky.lbbench.gen_cmd --service-names b21 --exp-name tot_single_mixed_12_replicas_3_b4_20_20_b2_d600 --extra-args '--workload tot_single --duration 600' --region-to-args '{"us-east-2":"--num-users 3 --num-branches 4","ap-northeast-1":"--num-users 20 --num-branches 2","eu-central-1":"--num-users 20 --num-branches 2"}' --reload-client
 
 
 # ==================== cross-region traffic handling ablation ====================

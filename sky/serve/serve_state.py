@@ -149,6 +149,10 @@ class ReplicaStatus(enum.Enum):
     UNKNOWN = 'UNKNOWN'
 
     @classmethod
+    def scheduled_statuses(cls) -> List['ReplicaStatus']:
+        return [cls.PENDING, cls.PROVISIONING, cls.STARTING, cls.READY]
+
+    @classmethod
     def failed_statuses(cls) -> List['ReplicaStatus']:
         return [
             cls.FAILED, cls.FAILED_CLEANUP, cls.FAILED_INITIAL_DELAY,
