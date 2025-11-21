@@ -70,9 +70,13 @@ def print_exception_no_traceback():
         yield
     else:
         original_tracelimit = getattr(sys, 'tracebacklimit', 1000)
-        sys.tracebacklimit = 0
-        yield
-        sys.tracebacklimit = original_tracelimit
+        try:
+            sys.tracebacklimit = 0
+            yield
+        finally:
+            # Always restore the original traceback limit, even if an
+            # exception was raised inside the context.
+            sys.tracebacklimit = original_tracelimit
 
 
 @contextlib.contextmanager
