@@ -387,13 +387,12 @@ def get_mount_cached_cmd(rclone_config: str, rclone_profile_name: str,
     # rclone to create separate cache directories at ~/.cache/rclone/vfs. It is
     # not necessary to specify separate cache directories.
     # Resolve upload parallelism (number of concurrent file transfers):
-    # default 1 to preserve previous ordering semantics, but allow override via
-    # SKYPILOT_RCLONE_TRANSFERS for high-throughput workloads (e.g., large
-    # checkpoint shards).
+    # default 16 for high-throughput workloads (e.g., large checkpoint shards),
+    # but allow override via SKYPILOT_RCLONE_TRANSFERS.
     transfer_resolve_cmd = (
         'RCLONE_TRANSFERS="${SKYPILOT_RCLONE_TRANSFERS}"; '
         'if [ -z "$RCLONE_TRANSFERS" ]; then '
-        '  RCLONE_TRANSFERS=1; '
+        '  RCLONE_TRANSFERS=16; '
         'fi'
     )
 

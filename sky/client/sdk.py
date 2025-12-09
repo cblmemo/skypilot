@@ -683,7 +683,7 @@ def _launch(
             confirm_shown = True
             click.confirm(prompt, default=True, abort=True, show_default=True)
 
-    if not confirm_shown:
+    if not confirm_shown and not os.environ.get('SKY_QUIET_LAUNCH'):
         click.secho('Running on cluster: ', fg='cyan', nl=False)
         click.secho(cluster_name)
 

@@ -23,6 +23,7 @@ from sky.server import common as server_common
 from sky.server.requests import payloads
 from sky.skylet import constants
 from sky.utils import common_utils
+from sky.utils import env_options
 from sky.utils import rich_utils
 from sky.utils import subprocess_utils
 from sky.utils import ux_utils
@@ -322,7 +323,9 @@ def upload_mounts_to_api_server(dag: 'sky.Dag',
         upload_id = f'{upload_id}-{uuid.uuid4().hex[:8]}'
         log_file = os.path.join(FILE_UPLOAD_LOGS_DIR, f'{upload_id}.log')
 
-        logger.info(ux_utils.starting_message('Uploading files to API server'))
+        if not env_options.Options.MINIMIZE_LOGGING.get():
+            logger.info(
+                ux_utils.starting_message('Uploading files to API server'))
         with rich_utils.client_status(
                 ux_utils.spinner_message(
                     'Uploading files to API server (1/2 - Zipping)',
@@ -358,9 +361,10 @@ def upload_mounts_to_api_server(dag: 'sky.Dag',
                                                  chunk_params)
         os.unlink(temp_zip_file.name)
         upload_logger.info(f'Uploaded files: {upload_list}')
-        logger.info(
-            ux_utils.finishing_message('Files uploaded',
-                                       log_file,
-                                       is_local=True))
+        if not env_options.Options.MINIMIZE_LOGGING.get():
+            logger.info(
+                ux_utils.finishing_message('Files uploaded',
+                                           log_file,
+                                           is_local=True))
 
     return dag
