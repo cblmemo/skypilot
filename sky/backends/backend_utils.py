@@ -1030,6 +1030,7 @@ def _add_auth_to_cluster_config(cloud: clouds.Cloud, tmp_yaml_path: str):
             clouds.Azure,
             clouds.DO,
             clouds.Nebius,
+            clouds.Trace,
     )):
         config = auth.configure_ssh_info(config)
     elif isinstance(cloud, clouds.GCP):
@@ -2434,6 +2435,8 @@ def refresh_cluster_record(
     record = global_user_state.get_cluster_from_name(cluster_name)
     if record is None:
         return None
+    if (record['handle'].launched_resources.cloud.canonical_name().lower() == 'trace'):
+        return record
     # TODO(zhwu, 05/20): switch to the specific workspace to make sure we are
     # using the correct cloud credentials.
     workspace = record.get('workspace', constants.SKYPILOT_DEFAULT_WORKSPACE)

@@ -73,7 +73,8 @@ def _bulk_provision(
                                                config=config)
 
     backoff = common_utils.Backoff(initial_backoff=1, max_backoff_factor=3)
-    logger.debug(f'\nWaiting for instances of {cluster_name!r} to be ready...')
+    logger.info('\n[CBL-INSTANCE-PENDING]Waiting for instances of '
+                f'{cluster_name!r} to be ready...')
     rich_utils.force_update_status(
         ux_utils.spinner_message('Launching - Checking instance status',
                                  str(provision_logging.config.log_path),
@@ -438,6 +439,8 @@ def _post_provision_setup(
                                               provision_record.region,
                                               cluster_name.name_on_cloud,
                                               provider_config=provider_config)
+    if cloud_name.lower() == 'trace':
+        return cluster_info
 
     if cluster_info.num_instances > 1:
         # Only worker nodes have logs in the per-instance log directory. Head

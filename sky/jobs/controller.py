@@ -238,6 +238,8 @@ class JobsController:
 
         logger.info('Started monitoring.')
 
+        import sky_spot
+
         # Only do the initial cluster launch if not resuming from a controller
         # failure. Otherwise, we will transit to recovering immediately.
         remote_job_submitted_at = time.time()
@@ -513,6 +515,7 @@ class JobsController:
         task_id = 0
         try:
             succeeded = True
+            assert len(self._dag.tasks) == 1, 'We support single task for now.'
             # We support chain DAGs only for now.
             for task_id, task in enumerate(self._dag.tasks):
                 succeeded = self._run_one_task(task_id, task)
@@ -754,6 +757,7 @@ def start(job_id, dag_yaml, pool):
         scheduler.job_done(job_id)
 
 
+# Reference: cant-be-late impl, https://github.com/skypilot-org/skypilot/commit/d676b50a70f42d27b59eb0d50cdfad0901391d10  # pylint: disable=line-too-long
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--job-id',
