@@ -487,8 +487,11 @@ def test_batch_ha_kill_running(generic_cloud: str):
                 f'VERIFIED=0\n'
                 f'LAST_PROGRESS=$COMPLETED_BEFORE\n'
                 f'STALL=0\n'
-                f'STALL_LIMIT=120\n'  # 120 * 5s = 10 min without progress
-                f'MAX_ITERS=600\n'  # hard cap: 50 min
+                # Each iteration is ~sleep 5s + sky-jobs-queue RTT,
+                # roughly 8-10s wall time.  Keep MAX_ITERS * that < the
+                # 60-min per-step timeout so the loop exits cleanly.
+                f'STALL_LIMIT=80\n'  # ~12 min of no progress
+                f'MAX_ITERS=300\n'  # hard cap: ~45 min
                 f'for i in $(seq 1 $MAX_ITERS); do\n'
                 f'  LINE=$(sky jobs queue 2>/dev/null '
                 f'| grep "{pool_name}" | head -1)\n'
